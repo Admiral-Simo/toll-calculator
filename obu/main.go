@@ -32,7 +32,6 @@ func sendFromObu(id int, conn *websocket.Conn) {
 	if err := conn.WriteJSON(obu); err != nil {
 		log.Fatal(err)
 	}
-	time.Sleep(sendInterval)
 }
 
 func generateOBUIDS(n int) []int {
@@ -53,5 +52,6 @@ func main() {
 		for _, id := range obuIDS {
 			sendFromObu(id, conn)
 		}
+		time.Sleep(sendInterval)
 	}
 }
