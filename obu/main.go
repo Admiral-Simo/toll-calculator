@@ -49,9 +49,9 @@ func main() {
 		log.Fatal(err)
 	}
 	obuIDS := generateOBUIDS(20)
-    for {
-	for _, id := range obuIDS {
-		sendFromObu(id, conn)
+	for {
+		for _, id := range obuIDS {
+			sendFromObu(id, conn)
+		}
 	}
-    }
 }
