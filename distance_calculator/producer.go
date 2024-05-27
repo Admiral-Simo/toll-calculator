@@ -8,7 +8,7 @@ import (
 )
 
 type DataProducer interface {
-	ProduceData(*types.OBUData) error
+	ProduceData(*types.Distance) error
 }
 
 type KafkaProducer struct {
@@ -29,7 +29,7 @@ func NewKafkaProducer(topic string) (DataProducer, error) {
 	}, nil
 }
 
-func (p *KafkaProducer) ProduceData(data *types.OBUData) error {
+func (p *KafkaProducer) ProduceData(data *types.Distance) error {
 	b, err := json.Marshal(data)
 	if err != nil {
 		return err

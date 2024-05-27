@@ -1,47 +1,26 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
-
-	"github.com/Admiral-Simo/toll-calculator/types"
-	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
 
+// Transport (HTTP, GRPC, Kafka) -> attach business logic to this transport
+
+const consumeTopic = "obudata"
+const produceTopic = "distancedata"
+
 func main() {
-	config := &kafka.ConfigMap{
-		"bootstrap.servers": "localhost:9092",
-		"group.id":          "myGroup",
-	}
-
-	consumer, err := kafka.NewConsumer(config)
+	var svc CalculatorServicer
+	var prod DataProducer
+	prod, err := NewKafkaProducer(produceTopic)
 	if err != nil {
-		log.Fatalf("failed to create consumer: %s", err)
+		log.Fatal("error creating kafka producer:", err)
 	}
-
-	topic := "obudata"
-	partitions := []kafka.TopicPartition{
-		{Topic: &topic, Partition: 0, Offset: kafka.Offset(0)},
-	}
-
-	err = consumer.Assign(partitions)
+	svc = NewCalculatorService(prod)
+	svc = NewLogMiddleware(svc)
+	kafkaConsumer, err := NewKafkaConsumer(consumeTopic, svc)
 	if err != nil {
-		log.Fatalf("failed to subscribe to topic: %s", err)
+		log.Fatal(err)
 	}
-
-	for {
-		msg, err := consumer.ReadMessage(-1)
-		if err != nil {
-			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
-			continue
-		}
-		var obu *types.OBUData
-		err = json.Unmarshal(msg.Value, &obu)
-		if err != nil {
-			fmt.Println("Error unmarsheling", err)
-			continue
-		}
-		fmt.Println(obu)
-	}
+	kafkaConsumer.Start()
 }
