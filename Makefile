@@ -3,7 +3,7 @@ obu:
 	@./bin/obu
 receiver:
 	@go run ./data_receiver
-caculator:
+calculator:
 	@go run ./distance_calculator
 
 .PHONY: obu
