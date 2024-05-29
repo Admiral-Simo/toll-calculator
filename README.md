@@ -6,7 +6,9 @@ docker-compute up -d
 ```
 
 // means simulate obus -> 10 obus sending real time location every (timeInteval : default is 1 second)
+```
 make obu
+```
 
 // this microservice receives from obu and puts it into a kafka pipeline "obudata"
 ```
