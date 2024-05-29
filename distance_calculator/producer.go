@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/Admiral-Simo/toll-calculator/types"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
@@ -34,11 +35,13 @@ func (p *KafkaProducer) ProduceData(data *types.Distance) error {
 	if err != nil {
 		return err
 	}
+	obuIDStr := fmt.Sprintf("%d", data.OBUID)
 	return p.producer.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{
 			Topic:     &p.topic,
 			Partition: kafka.PartitionAny,
 		},
+		Key:   []byte(obuIDStr),
 		Value: b,
 	}, nil)
 }
