@@ -20,4 +20,6 @@ make receiver
 make calculator
 ```
 
+# cost per kilometer is going to be 0.25$
+
 made by `admiral simo`
