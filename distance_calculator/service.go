@@ -14,14 +14,12 @@ type CalculatorServicer interface {
 type CalculatorService struct {
 	previousCoordinates map[int]*types.OBUData // Map to store previous coordinates for each OBU
 	distances           map[int]float64        // Map to store distances for each OBU
-	prod                DataProducer
 }
 
-func NewCalculatorService(prod DataProducer) *CalculatorService {
+func NewCalculatorService() *CalculatorService {
 	return &CalculatorService{
 		previousCoordinates: make(map[int]*types.OBUData),
 		distances:           make(map[int]float64),
-		prod:                prod,
 	}
 }
 
@@ -40,7 +38,9 @@ func (s *CalculatorService) CalculateDistance(data *types.OBUData) (float64, err
 		Unix:  time.Now().Unix(),
 	}
 
-	s.prod.ProduceData(distanceData)
+	// here should be a POST request to the aggregator microservice
+	// POST(distanceData)
+	_ = distanceData
 
 	return s.distances[data.OBUID], nil
 }
