@@ -13,11 +13,13 @@ import (
 const (
 	sendInterval = time.Second
 	wsEndpoint   = "ws://127.0.0.1:30000/ws"
+	latRange     = 0.5
+	longRange    = 0.5
 )
 
 func genLatLong() (float64, float64) {
-	f := rand.Float64()*200 - 100 // means range from -100 to 100
-	s := rand.Float64()*200 - 100 // means range from -100 to 100
+	f := rand.Float64()*longRange - longRange/2 // means range from -latRange to latRange
+	s := rand.Float64()*longRange - longRange/2 // means range from -longRange to longRange
 	return f, s
 }
 
